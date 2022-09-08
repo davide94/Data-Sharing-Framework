@@ -50,7 +50,7 @@ app.get('/status/:id', async (req, res) => {
 
 app.listen(process.env.PORT)
 
-// TODO: make it run periodically
+// TODO: make it run asynchronously
 const worker = async () => {
   const [task] = Object.values(db).filter(x => x.status === 'RECEIVED')
   db[task.id].status = 'PROCESSING'
@@ -61,6 +61,7 @@ const worker = async () => {
   const imageURI = await Docker.publish(image)
 
   // TODO: deploy image in proper location
+  // TODO: db[task.id].endpoint = ...
 
   db[task.id].status = 'COMPLETED'
 }
