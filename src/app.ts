@@ -3,8 +3,9 @@ import express from 'express'
 import 'dotenv/config'
 import { Parser } from './lib/Parser'
 import { PDP } from './lib/PDP'
-import { Blockchain } from './lib/Blockchain'
 import { Docker } from './lib/Docker'
+import { IPFS } from './lib/IPFS'
+import { SmartContract } from './lib/SmartContract'
 
 const app = express()
 
@@ -19,13 +20,14 @@ app.post('/', async (req, res) => {
   const request = Parser.parse(req.body)
 
   const decision = await PDP.validate(request)
-  await Blockchain.store(decision)
+  const decisionCid = await IPFS.add(decision)
+  await SmartContract.storeDecision(decisionCid)
 
   let statusCode, body
   if (decision.allow) {
     const id = uuidv4()
     const status = 'RECEIVED'
-    db[id] = { status, request }
+    db[id] = { status, request, decision }
 
     statusCode = 202
     body = { id, status }
@@ -39,10 +41,14 @@ app.post('/', async (req, res) => {
 app.get('/status/:id', async (req, res) => {
   // @ts-ignore
   const task = db[req.id]
-  const { status, endpoint } = task
+  const { status, endpoint, imageURI } = task
 
   if (task.status === 'COMPLETED') {
-    res.send({ status, endpoint })
+    if (task.decision.deployLocal) {
+      res.send({ status, endpoint })
+    } else {
+      res.send({ status, imageURI })
+    }
   } else {
     res.status(202).send({ status })
   }
@@ -55,13 +61,17 @@ const worker = async () => {
   const [task] = Object.values(db).filter(x => x.status === 'RECEIVED')
   db[task.id].status = 'PROCESSING'
 
-  // TODO: properly format docker file
+  const image = await Docker.build(
+    task.request.technology,
+    task.request.resource,
+    task.decision.loggingPolicy
+  )
 
-  const image = await Docker.build()
-  const imageURI = await Docker.publish(image)
-
-  // TODO: deploy image in proper location
-  // TODO: db[task.id].endpoint = ...
+  if (task.decision.deployLocal) {
+    db[task.id].endpoint = await Docker.run(image)
+  } else {
+    db[task.id].imageURI = await Docker.publish(image)
+  }
 
   db[task.id].status = 'COMPLETED'
 }

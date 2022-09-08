@@ -9,4 +9,8 @@ export class PDP {
 
 export type Decision = {
   allow: boolean
+  deployLocal: boolean
+  loggingPolicy: LoggingPolicy
 }
+
+export type LoggingPolicy = {}
