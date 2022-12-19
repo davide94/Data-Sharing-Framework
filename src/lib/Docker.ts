@@ -1,27 +1,42 @@
 import { LoggingPolicy } from './PDP'
+import { Docker as DockerClient, Options } from 'docker-cli-js'
+
+const options = new Options()
+const docker = new DockerClient(options)
+
+const LOCAL_ENV_HOST = process.env.LOCAL_ENV_HOST
+let port: number
 
 export class Docker {
   static async build (
     technology: string,
-    resource: string,
+    resource: string, // path of the file containing the SQL that inits the DB with the desired data
     loggingPolicy: LoggingPolicy
   ) {
-    throw Error('NotImplemented')
+    let dockerfile
+    switch (technology) {
+      case 'SQL':
+        dockerfile = 'sql.docker-compose.yml'
+        port = 5432
+        break
+      default:
+        throw new Error('Unsupported technology')
+    }
 
-    // TODO: get Dockerfile template based on technology
+    const args = `RESOURCE=\${${resource}} LOGGING_POLICY=\${${loggingPolicy}} `
 
-    // TODO: cp resource
-
-    // TODO: store loggingPolicy
+    const data = await docker.command(
+      `build -f ${dockerfile} -t DAM --build-arg ${args}`
+    )
+    console.log(data)
   }
 
-  static async publish (image: any) {
-    // TODO: implement
-    throw Error('NotImplemented')
+  static async publish () {
+    await docker.command(`publish DAM`)
   }
 
-  static async run (image: any) {
-    // TODO: implement
-    throw Error('NotImplemented')
+  static async run () {
+    await docker.command('run DAM')
+    return `${LOCAL_ENV_HOST}/:${port}`
   }
 }

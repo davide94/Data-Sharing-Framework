@@ -1,6 +1,6 @@
 # Data-Sharing-Framework
 
-![Architecture](resources/Modeling-Rev3.png)
+![Architecture](resources/Architecture.png)
 
 |                XAC                 |                DAM                 |
 |:----------------------------------:|:----------------------------------:|

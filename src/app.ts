@@ -4,24 +4,20 @@ import 'dotenv/config'
 import { Parser } from './lib/Parser'
 import { PDP } from './lib/PDP'
 import { Docker } from './lib/Docker'
-import { IPFS } from './lib/IPFS'
-import { SmartContract } from './lib/SmartContract'
+import { PersistenceManager } from './lib/PersistenceManager'
 
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-// TODO: validate request
 
-// TODO: use an actual DB
 const db: { [id: string]: any } = {}
 
 app.post('/', async (req, res) => {
   const request = Parser.parse(req.body)
 
   const decision = await PDP.validate(request)
-  const decisionCid = await IPFS.add(decision)
-  await SmartContract.storeDecision(decisionCid)
+  await PersistenceManager.storeDecision(decision)
 
   let statusCode, body
   if (decision.allow) {
@@ -56,22 +52,23 @@ app.get('/status/:id', async (req, res) => {
 
 app.listen(process.env.PORT)
 
-// TODO: make it run asynchronously
 const worker = async () => {
   const [task] = Object.values(db).filter(x => x.status === 'RECEIVED')
   db[task.id].status = 'PROCESSING'
 
-  const image = await Docker.build(
+  await Docker.build(
     task.request.technology,
     task.request.resource,
     task.decision.loggingPolicy
   )
 
   if (task.decision.deployLocal) {
-    db[task.id].endpoint = await Docker.run(image)
+    db[task.id].endpoint = await Docker.run()
   } else {
-    db[task.id].imageURI = await Docker.publish(image)
+    db[task.id].imageURI = await Docker.publish()
   }
 
   db[task.id].status = 'COMPLETED'
 }
+
+setInterval(worker, 60 * 1000)

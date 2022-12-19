@@ -64,12 +64,10 @@ export class Parser {
   }
 
   private static parseS3 (query: string, sender: string): ParsedRequest {
-    // TODO: implement
-    throw Error('NotImplemented')
+    throw new Error('Technology not supported')
   }
 
   private static parseREST (query: string, sender: string): ParsedRequest {
-    // TODO: implement
-    throw Error('NotImplemented')
+    throw new Error('Technology not supported')
   }
 }
