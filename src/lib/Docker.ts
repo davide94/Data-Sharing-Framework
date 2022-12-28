@@ -9,9 +9,10 @@ let port: number
 
 export class Docker {
   static async build (
+    requestId: string,
     technology: string,
     resource: string, // path of the file containing the SQL that inits the DB with the desired data
-    loggingPolicy: LoggingPolicy
+    loggingPolicy: string
   ) {
     let dockerfile
     switch (technology) {
@@ -23,7 +24,7 @@ export class Docker {
         throw new Error('Unsupported technology')
     }
 
-    const args = `RESOURCE=\${${resource}} LOGGING_POLICY=\${${loggingPolicy}} `
+    const args = `REQUEST_ID=\${${requestId}} RESOURCE=\${${resource}} LOGGING_POLICY=\${${loggingPolicy}} `
 
     const data = await docker.command(
       `build -f ${dockerfile} -t DAM --build-arg ${args}`

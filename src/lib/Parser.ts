@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid'
+
 enum Action {
   read,
   write
@@ -10,6 +12,7 @@ export type Request = {
 }
 
 export type ParsedRequest = {
+  id: string
   sender: string
   action: Action
   resource: string
@@ -17,22 +20,28 @@ export type ParsedRequest = {
 
 export class Parser {
   static parse (request: Request): ParsedRequest {
-    const { sender, technology, query } = request
+    const { technology } = request
+
+    const r = {
+      ...request,
+      id: uuidv4()
+    }
 
     switch (technology) {
       case 'SQL':
-        return Parser.parseSQL(query, sender)
+        return Parser.parseSQL(r)
       case 'S3':
-        return Parser.parseS3(query, sender)
+        return Parser.parseS3(r)
       case 'REST':
-        return Parser.parseREST(query, sender)
+        return Parser.parseREST(r)
       default:
         throw new Error('Unsupported technology')
     }
   }
 
-  private static parseSQL (query: string, sender: string): ParsedRequest {
-    const [, sqlAction] = query.match(/^(SELECT|UPDATE|INSERT)[\s\S]+?\;\s*?$/)!
+  private static parseSQL (request: Request & { id: string }): ParsedRequest {
+    const { id, sender, query } = request
+    const [, sqlAction] = query.match(/^(SELECT|UPDATE|INSERT)/)!
 
     let action
     let resource
@@ -60,14 +69,14 @@ export class Parser {
         throw new Error('Unsupported query')
     }
 
-    return { sender, action, resource }
+    return { id, sender, action, resource }
   }
 
-  private static parseS3 (query: string, sender: string): ParsedRequest {
+  private static parseS3 (request: Request & { id: string }): ParsedRequest {
     throw new Error('Technology not supported')
   }
 
-  private static parseREST (query: string, sender: string): ParsedRequest {
+  private static parseREST (request: Request & { id: string }): ParsedRequest {
     throw new Error('Technology not supported')
   }
 }

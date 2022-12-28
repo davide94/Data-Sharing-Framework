@@ -18,14 +18,14 @@ export class SmartContract {
     return SmartContract.instance
   }
 
-  static async storeDecision (cid: string) {
+  static async storeDecision (requestId: string, cid: string) {
     const instance = await SmartContract.getInstance()
-    return await instance.methods.storeDecision(cid).call()
+    return await instance.methods.storeDecision(requestId, cid).call()
   }
 
-  static async storeLog (cid: string) {
+  static async storeLog (requestId: string, cid: string) {
     const instance = await SmartContract.getInstance()
-    return await instance.methods.storeLog(cid).call()
+    return await instance.methods.storeLog(requestId, cid).call()
   }
 
   static async getRequestInfo (requestId: string) {

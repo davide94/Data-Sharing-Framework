@@ -1,11 +1,11 @@
-import * as IPFSCore from 'ipfs-core'
+// import * as IPFSCore from 'ipfs-core'
 
 export class IPFS {
-  static instance: IPFSCore.IPFS
+  static instance: any // IPFSCore.IPFS
 
   private static async getInstance () {
     if (!IPFS.instance) {
-      IPFS.instance = await IPFSCore.create()
+      IPFS.instance = null // await IPFSCore.create()
     }
     return IPFS.instance
   }

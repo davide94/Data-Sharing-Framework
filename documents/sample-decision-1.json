@@ -1,0 +1,11 @@
+{
+  "request": {
+    "id": "5b210542-22ba-4cbf-9f57-519c7b9b3f98",
+    "sender": "H1",
+    "technology": "SQL",
+    "query": "SELECT * FROM PD1"
+  },
+  "allow": true,
+  "deployLocal": true,
+  "loggingPolicy": "default-logging-policy.xml"
+}

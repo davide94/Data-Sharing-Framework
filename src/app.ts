@@ -15,18 +15,18 @@ const db: { [id: string]: any } = {}
 
 app.post('/', async (req, res) => {
   const request = Parser.parse(req.body)
+  request.id = uuidv4()
 
   const decision = await PDP.validate(request)
-  await PersistenceManager.storeDecision(decision)
+  await PersistenceManager.storeDecision(request.id, decision)
 
   let statusCode, body
   if (decision.allow) {
-    const id = uuidv4()
     const status = 'RECEIVED'
-    db[id] = { status, request, decision }
+    db[decision.request.id] = { status, request, decision }
 
     statusCode = 202
-    body = { id, status }
+    body = { id: decision.request.id, status }
   } else {
     statusCode = 403
   }
@@ -57,6 +57,7 @@ const worker = async () => {
   db[task.id].status = 'PROCESSING'
 
   await Docker.build(
+    task.id,
     task.request.technology,
     task.request.resource,
     task.decision.loggingPolicy

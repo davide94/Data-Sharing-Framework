@@ -13,27 +13,46 @@ export class PDP {
       body: JSON.stringify(request)
     })
 
+    // const response = {
+    //   ok: true,
+    //   json: () => ({
+    //     allow: true,
+    //     obligations: [
+    //       {
+    //         'obligationId': 'deployLocal',
+    //         'value': 'true'
+    //       },
+    //       {
+    //         'obligationId': 'loggingPolicy',
+    //         'value': 'logging-policy.xml'
+    //       },
+    //     ]
+    //   })
+    // }
+
     if (!response.ok) {
       throw Error('PDP Error')
     }
     const { allow, obligations } = await response.json()
 
     return {
+      request,
       allow,
       deployLocal: !!obligations.find(
         (o: any) => o.obligationId === 'deployLocal'
-      ),
-      loggingPolicy: obligations.find(
-        (o: any) => o.obligationId === 'loggingPolicy'
-      )
+      )?.value,
+      loggingPolicy:
+        obligations.find((o: any) => o.obligationId === 'loggingPolicy')
+          ?.value ?? 'default-logging-policy.xml'
     }
   }
 }
 
 export type Decision = {
+  request: ParsedRequest
   allow: boolean
   deployLocal: boolean
-  loggingPolicy: LoggingPolicy
+  loggingPolicy: string
 }
 
 export type LoggingPolicy = 'ALL' | 'HIGH' | 'LOW'
