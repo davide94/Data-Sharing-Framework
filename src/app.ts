@@ -18,7 +18,14 @@ app.post('/', async (req, res) => {
   const request = Parser.parse(req.body)
   request.id = uuidv4()
 
+  console.log('Processing request:')
+  console.log(request)
+
   const decision = await PDP.validate(request)
+
+  console.log('Decision taken:')
+  console.log(decision)
+
   await PersistenceManager.storeDecision(request.id, decision)
 
   let statusCode, body
@@ -75,4 +82,4 @@ const worker = async () => {
   db[task.id].status = 'COMPLETED'
 }
 
-setInterval(worker, 60 * 1000)
+// setInterval(worker, 60 * 1000)

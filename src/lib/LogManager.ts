@@ -13,7 +13,7 @@ const logLevel = parser.parseFromString(LOG_POLICY, 'application/xml')
 fs.watch(LOGS_FOLDER, async (eventType, filename) => {
   const log = fs.readFileSync(filename, { encoding: 'utf-8' })
   if (filter(log)) {
-    await PersistenceManager.storeLogs(REQUEST_ID, log)
+    await PersistenceManager.storeLog(REQUEST_ID, log)
   }
 })
 

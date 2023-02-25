@@ -29,7 +29,9 @@
     "ipfs-core": "^0.16.0",
     "ipfs-http-client": "^56.0.2",
     "uuid": "^9.0.0",
-    "web3": "^1.7.5"
+    "web3": "^1.7.5",
+    "web3-core": "^1.8.2",
+    "web3-eth-accounts": "^1.8.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",

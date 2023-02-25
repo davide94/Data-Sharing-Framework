@@ -14,17 +14,18 @@ export class IPFS {
 
   static async get (cid: CID): Promise<any> {
     const client = await IPFS.getInstance()
-    const iterator = client.dag.get(cid)
-
-    return iterator
+    return client.dag.get(cid)
   }
 
-  static async put (data: object): Promise<CID> {
+  static async put (data: string, links: string[] = []): Promise<CID> {
     const instance = await IPFS.getInstance()
+
+    // TODO: map links from string[] to PBLink
+
     const cid = await instance.dag.put(
       {
-        Data: Buffer.from(JSON.stringify(data)),
-        Links: []
+        Data: Buffer.from(data),
+        Links: links
       },
       {
         storeCodec: 'dag-pb'
