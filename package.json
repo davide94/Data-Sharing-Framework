@@ -5,6 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "start": "ts-node src/app.ts",
+    "balana": "npm --prefix mocks/Balana start",
+    "ipfs": "npm --prefix mocks/IPFS start",
     "format": "prettier-standard \"src/**/*.ts\" --format && prettier-standard \"tests/**/*.ts\" --format"
   },
   "repository": {
@@ -19,10 +21,13 @@
   },
   "homepage": "https://github.com/davide94/XAC#readme",
   "dependencies": {
+    "bs58": "^5.0.0",
     "docker-cli-js": "^2.9.0",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
+    "ipfs-client": "^0.10.0",
     "ipfs-core": "^0.16.0",
+    "ipfs-http-client": "^56.0.2",
     "uuid": "^9.0.0",
     "web3": "^1.7.5"
   },

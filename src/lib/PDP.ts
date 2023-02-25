@@ -13,23 +13,6 @@ export class PDP {
       body: JSON.stringify(request)
     })
 
-    // const response = {
-    //   ok: true,
-    //   json: () => ({
-    //     allow: true,
-    //     obligations: [
-    //       {
-    //         'obligationId': 'deployLocal',
-    //         'value': 'true'
-    //       },
-    //       {
-    //         'obligationId': 'loggingPolicy',
-    //         'value': 'logging-policy.xml'
-    //       },
-    //     ]
-    //   })
-    // }
-
     if (!response.ok) {
       throw Error('PDP Error')
     }

@@ -6,6 +6,7 @@ import { PDP } from './lib/PDP'
 import { Docker } from './lib/Docker'
 import { PersistenceManager } from './lib/PersistenceManager'
 
+const PORT = process.env.PORT
 const app = express()
 
 app.use(express.json())
@@ -50,7 +51,9 @@ app.get('/status/:id', async (req, res) => {
   }
 })
 
-app.listen(process.env.PORT)
+app.listen(PORT, () => {
+  console.log(`XAC listening on port ${PORT}`)
+})
 
 const worker = async () => {
   const [task] = Object.values(db).filter(x => x.status === 'RECEIVED')

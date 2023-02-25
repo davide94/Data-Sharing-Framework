@@ -1,21 +1,36 @@
-// import * as IPFSCore from 'ipfs-core'
+import { CID, create, IPFSHTTPClient } from 'ipfs-http-client'
+
+const IPFS_URI = process.env.IPFS_URI
 
 export class IPFS {
-  static instance: any // IPFSCore.IPFS
+  static instance: IPFSHTTPClient
 
   private static async getInstance () {
     if (!IPFS.instance) {
-      IPFS.instance = null // await IPFSCore.create()
+      IPFS.instance = await create({ url: IPFS_URI + '/api/v0' })
     }
     return IPFS.instance
   }
 
-  static async add (data: any): Promise<string> {
-    const instance = await IPFS.getInstance()
-    const fileAdded = await instance.add({
-      content: data
-    })
+  static async get (cid: CID): Promise<any> {
+    const client = await IPFS.getInstance()
+    const iterator = client.dag.get(cid)
 
-    return fileAdded.cid.toString()
+    return iterator
+  }
+
+  static async put (data: object): Promise<CID> {
+    const instance = await IPFS.getInstance()
+    const cid = await instance.dag.put(
+      {
+        Data: Buffer.from(JSON.stringify(data)),
+        Links: []
+      },
+      {
+        storeCodec: 'dag-pb'
+      }
+    )
+
+    return cid
   }
 }

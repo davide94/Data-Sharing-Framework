@@ -19,8 +19,10 @@ export class SmartContract {
   }
 
   static async storeDecision (requestId: string, cid: string) {
+    const rid = requestId.replace(/-/g, '')
+
     const instance = await SmartContract.getInstance()
-    return await instance.methods.storeDecision(requestId, cid).call()
+    return await instance.methods.storeDecision(rid, cid).call()
   }
 
   static async storeLog (requestId: string, cid: string) {
