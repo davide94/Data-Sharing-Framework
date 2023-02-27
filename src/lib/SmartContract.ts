@@ -46,9 +46,10 @@ export class SmartContract {
   }
 
   static async getRequestInfo (id: string) {
-    const { '0': requestId, '1': cid } = await contract.methods
-      .getRequestInfo(id)
-      .call()
-    return { requestId, cid }
+    const {
+      '0': decisionCid,
+      '1': logsCid
+    } = await contract.methods.getRequestInfo(id).call()
+    return { decisionCid, logsCid }
   }
 }

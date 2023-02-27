@@ -1,4 +1,5 @@
 import { CID, create, IPFSHTTPClient } from 'ipfs-http-client'
+const Cid = require('cids')
 
 const IPFS_URI = process.env.IPFS_URI
 
@@ -20,18 +21,14 @@ export class IPFS {
   static async put (data: string, links: string[] = []): Promise<CID> {
     const instance = await IPFS.getInstance()
 
-    // TODO: map links from string[] to PBLink
-
-    const cid = await instance.dag.put(
+    return await instance.dag.put(
       {
         Data: Buffer.from(data),
-        Links: links
+        Links: links.map(x => ({ Hash: new Cid(x) }))
       },
       {
         storeCodec: 'dag-pb'
       }
     )
-
-    return cid
   }
 }

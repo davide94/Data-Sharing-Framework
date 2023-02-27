@@ -16,6 +16,10 @@ export class PersistenceManager {
     )
   }
 
+  private static hexToCid (hex: string): string {
+    return 'Qm' + bs58.encode(Buffer.from(hex.slice(2), 'hex'))
+  }
+
   static async storeDecision (requestId: string, decision: Decision) {
     const rid = PersistenceManager.ridHex(requestId)
 
@@ -33,15 +37,23 @@ export class PersistenceManager {
   }
 
   static async storeLog (requestId: string, log: string) {
-    const { cid: oldCid } = await SmartContract.getRequestInfo(requestId)
+    const rid = PersistenceManager.ridHex(requestId)
+
+    const ridHex = PersistenceManager.ridHex(requestId)
+    const { logsCid: cidHex } = await SmartContract.getRequestInfo(ridHex)
     const links: any[] = []
-    if (Number(oldCid) != 0) {
-      links.push(oldCid)
-    }
+
+    // if (Number(cidHex) != 0) {
+    //   links.push(PersistenceManager.hexToCid(cidHex))
+    // }
 
     const logsCid = await IPFS.put(log, links)
-    const cid = PersistenceManager.cidHex(logsCid)
+    console.log('Logs stored on IPFS.')
+    console.log('CID: ' + logsCid)
 
-    await SmartContract.storeLog(requestId, cid)
+    const cid = PersistenceManager.cidHex(logsCid)
+    console.log(cid)
+
+    await SmartContract.storeLog(rid, cid)
   }
 }

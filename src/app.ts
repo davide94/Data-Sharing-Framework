@@ -34,7 +34,7 @@ app.post('/', async (req, res) => {
     db[decision.request.id] = { status, request, decision }
 
     statusCode = 202
-    body = { id: decision.request.id, status }
+    body = { id: decision.request.id, status, decision }
   } else {
     statusCode = 403
   }

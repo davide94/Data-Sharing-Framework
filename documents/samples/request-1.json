@@ -1,5 +1,5 @@
 {
   "sender": "H1",
   "technology": "SQL",
-  "query": "SELECT * FROM PD1"
+  "query": "SELECT * FROM GS1"
 }

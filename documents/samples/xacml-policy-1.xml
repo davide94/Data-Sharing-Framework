@@ -1,0 +1,50 @@
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="Web_Filter_Policy_1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" Version="1.0">
+    <Target/>
+
+    <Rule Effect="Permit" RuleId="Rule_for_all_groups">
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GS1</AttributeValue>
+                        <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+                                             Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+                                             DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">read</AttributeValue>
+                        <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+                                             Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+                                             DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+                <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+                                     Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+                                     DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">H1</AttributeValue>
+                </Apply>
+            </Apply>
+        </Condition>
+    </Rule>
+    <Rule Effect="Deny" RuleId="deny-rule"/>
+
+    <ObligationExpressions>
+        <ObligationExpression FulfillOn="Permit" ObligationId="logging-policy">
+            <AttributeAssignmentExpression AttributeId="logging-policy-id">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">default-logging-policy.xml</AttributeValue>
+            </AttributeAssignmentExpression>
+        </ObligationExpression>
+    </ObligationExpressions>
+    <ObligationExpressions>
+        <ObligationExpression FulfillOn="Permit" ObligationId="data-locality">
+            <AttributeAssignmentExpression AttributeId="data-locality-id">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">local</AttributeValue>
+            </AttributeAssignmentExpression>
+        </ObligationExpression>
+    </ObligationExpressions>
+</Policy>

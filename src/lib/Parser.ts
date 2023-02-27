@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid'
 
 enum Action {
-  read,
-  write
+  read = 'read',
+  write = 'write'
 }
 
 export type Request = {

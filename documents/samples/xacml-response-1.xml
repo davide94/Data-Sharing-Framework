@@ -1,0 +1,17 @@
+<Response
+        xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+    <Result>
+        <Decision>Permit</Decision>
+        <Status>
+            <StatusCode Value="urn:oasis:names:tc:xacml:1.0:status:ok"/>
+        </Status>
+        <Obligations>
+            <Obligation ObligationId="data-locality">
+                <AttributeAssignment  AttributeId="data-locality-id" DataType="http://www.w3.org/2001/XMLSchema#string">local</AttributeAssignment>
+            </Obligation>
+            <Obligation ObligationId="logging-policy">
+                <AttributeAssignment  AttributeId="logging-policy-id" DataType="http://www.w3.org/2001/XMLSchema#string">default-logging-policy.xml</AttributeAssignment>
+            </Obligation>
+        </Obligations>
+    </Result>
+</Response>
