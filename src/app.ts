@@ -83,3 +83,7 @@ const worker = async () => {
 }
 
 // setInterval(worker, 60 * 1000)
+
+// ;(async () => {
+//   await Docker.build('1', 'SQL', '', '')
+// })()

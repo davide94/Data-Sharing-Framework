@@ -1,0 +1,10 @@
+FROM postgres:alpine
+
+ENV REQUEST_ID=$REQUEST_ID
+ENV POSTGRES_PASSWORD=password
+
+RUN apk add --update npm
+RUN npm i forever -g
+
+COPY ["scripts/postgres.startup.sh", "docker-entrypoint-initdb.d/"]
+COPY ["scripts/app.js", "."]
