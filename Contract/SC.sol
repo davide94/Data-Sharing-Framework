@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity >=0.7.0 <0.9.0;
 
 /**
@@ -6,12 +8,12 @@ pragma solidity >=0.7.0 <0.9.0;
  */
 contract SC {
 
-    address payable owner;
+    address owner;
 
     mapping(bytes32 => bytes32) decisions;
     mapping(bytes32 => bytes32) logs;
 
-    constructor() public {
+    constructor() {
         owner = msg.sender;
     }
 
