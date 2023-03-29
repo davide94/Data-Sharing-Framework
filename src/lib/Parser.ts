@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-enum Action {
+export enum Action {
   read = 'read',
   write = 'write'
 }

@@ -2,7 +2,7 @@
   "name": "dam",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.js",
+  "main": "app.js",
   "scripts": {
     "start": "ts-node src/lib/LogManager.ts",
     "format": "prettier-standard \"src/**/*.ts\" --format && prettier-standard \"tests/**/*.ts\" --format"

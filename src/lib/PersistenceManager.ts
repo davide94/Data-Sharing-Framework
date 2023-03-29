@@ -34,6 +34,8 @@ export class PersistenceManager {
     console.log('Decision stored on Blockchain.')
     console.log('transaction:')
     console.log(transaction)
+
+    return transaction
   }
 
   static async storeLog (requestId: string, log: string) {
@@ -54,6 +56,11 @@ export class PersistenceManager {
     const cid = PersistenceManager.cidHex(logsCid)
     console.log(cid)
 
-    await SmartContract.storeLog(rid, cid)
+    const transaction = await SmartContract.storeLog(rid, cid)
+    console.log('Decision stored on Blockchain.')
+    console.log('transaction:')
+    console.log(transaction)
+
+    return transaction
   }
 }

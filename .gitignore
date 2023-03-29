@@ -64,3 +64,5 @@ typings/
 .DS_Store
 
 mocks/
+
+src/test.ts

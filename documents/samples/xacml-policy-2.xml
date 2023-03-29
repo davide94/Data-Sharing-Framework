@@ -1,0 +1,34 @@
+<Policy PolicyId="GS1_policy" RuleCombiningAlgId="permit-overrides">
+    <Target>
+        <AnyOf>
+            <AllOf>
+                <Match MatchId="string-is-in">
+                    <AttributeValue DataType="string">GS1</AttributeValue>
+                    <AttributeDesignator AttributeId="resource-id" DataType="string" MustBePresent="true"/>
+                </Match>
+            </AllOf>
+        </AnyOf>
+    </Target>
+    <Rule Effect="Permit" RuleId="H1-permit-rule">
+        <Condition>
+            <Apply FunctionId="string-equal">
+                <AttributeValue DataType="string">H1</AttributeValue>
+                <AttributeDesignator AttributeId="subject-id" Category="subject-category:access-subject"
+                                     DataType="string" MustBePresent="true"/>
+            </Apply>
+        </Condition>
+    </Rule>
+    <Rule Effect="Deny" RuleId="default-deny"/>
+    <ObligationExpressions>
+        <ObligationExpression FulfillOn="Permit" ObligationId="logging-policy">
+            <AttributeAssignmentExpression AttributeId="logging-policy-id">
+                <AttributeValue DataType="string">logging-policy-GS1.xml</AttributeValue>
+            </AttributeAssignmentExpression>
+        </ObligationExpression>
+        <ObligationExpression FulfillOn="Permit" ObligationId="data-locality">
+            <AttributeAssignmentExpression AttributeId="data-locality-id">
+                <AttributeValue DataType="string">local</AttributeValue>
+            </AttributeAssignmentExpression>
+        </ObligationExpression>
+    </ObligationExpressions>
+</Policy>

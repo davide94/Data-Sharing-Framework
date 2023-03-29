@@ -5,6 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "start": "ts-node src/app.ts",
+    "test": "ts-node src/test.ts",
+    "worker": "ts-node src/worker.ts",
     "balana": "cd Balana && ./mvnw spring-boot:run",
     "format": "prettier-standard \"src/**/*.ts\" --format && prettier-standard \"tests/**/*.ts\" --format"
   },

@@ -62,8 +62,13 @@ app.listen(PORT, () => {
   console.log(`XAC listening on port ${PORT}`)
 })
 
-const worker = async () => {
+const worker = async (): Promise<any> => {
   const [task] = Object.values(db).filter(x => x.status === 'RECEIVED')
+
+  if (task == null) {
+    return setInterval(worker, 6 * 1000)
+  }
+
   db[task.id].status = 'PROCESSING'
 
   await Docker.build(
@@ -82,8 +87,4 @@ const worker = async () => {
   db[task.id].status = 'COMPLETED'
 }
 
-// setInterval(worker, 60 * 1000)
-
-// ;(async () => {
-//   await Docker.build('1', 'SQL', '', '')
-// })()
+setInterval(worker, 6 * 1000)
